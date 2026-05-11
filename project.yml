@@ -1,0 +1,78 @@
+name: TermHere
+options:
+  bundleIdPrefix: com.termhere
+  deploymentTarget:
+    macOS: "13.0"
+  createIntermediateGroups: true
+settings:
+  base:
+    SWIFT_VERSION: "5.9"
+    MARKETING_VERSION: "0.1.0"
+    CURRENT_PROJECT_VERSION: "1"
+    DEVELOPMENT_TEAM: ""
+    CODE_SIGN_STYLE: Automatic
+    ENABLE_HARDENED_RUNTIME: YES
+targets:
+  TermHere:
+    type: application
+    platform: macOS
+    sources:
+      - path: TermHere
+    resources:
+      - path: Templates
+        type: folder
+    info:
+      path: TermHere/Info.plist
+      properties:
+        CFBundleName: TermHere
+        CFBundleDisplayName: TermHere
+        CFBundleShortVersionString: $(MARKETING_VERSION)
+        CFBundleVersion: $(CURRENT_PROJECT_VERSION)
+        LSMinimumSystemVersion: $(MACOSX_DEPLOYMENT_TARGET)
+        LSUIElement: false
+        NSHumanReadableCopyright: ""
+        NSAppleEventsUsageDescription: "TermHere needs to send commands to Terminal so it can open a new window at the folder you clicked."
+    entitlements:
+      path: TermHere/TermHere.entitlements
+      properties:
+        com.apple.security.app-sandbox: true
+        com.apple.security.files.user-selected.read-write: true
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.termhere.TermHere
+        GENERATE_INFOPLIST_FILE: NO
+        COMBINE_HIDPI_IMAGES: YES
+    dependencies:
+      - target: TermHereFinder
+        embed: true
+        codeSign: true
+
+  TermHereFinder:
+    type: app-extension
+    platform: macOS
+    sources:
+      - path: TermHereFinder
+    info:
+      path: TermHereFinder/Info.plist
+      properties:
+        CFBundleName: TermHereFinder
+        CFBundleDisplayName: TermHere Finder Extension
+        CFBundleShortVersionString: $(MARKETING_VERSION)
+        CFBundleVersion: $(CURRENT_PROJECT_VERSION)
+        LSMinimumSystemVersion: $(MACOSX_DEPLOYMENT_TARGET)
+        NSAppleEventsUsageDescription: "TermHere needs to send commands to Terminal so it can open a new window at the folder you clicked."
+        NSExtension:
+          NSExtensionPointIdentifier: com.apple.FinderSync
+          NSExtensionPrincipalClass: $(PRODUCT_MODULE_NAME).FinderSyncController
+    entitlements:
+      path: TermHereFinder/TermHereFinder.entitlements
+      properties:
+        com.apple.security.app-sandbox: true
+        com.apple.security.temporary-exception.apple-events:
+          - com.apple.Terminal
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.termhere.TermHere.Finder
+        GENERATE_INFOPLIST_FILE: NO
+        SKIP_INSTALL: YES
+        LD_RUNPATH_SEARCH_PATHS: "$(inherited) @executable_path/../../../../Frameworks @executable_path/../../../../../../../Frameworks"
