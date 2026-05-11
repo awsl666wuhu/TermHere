@@ -6,6 +6,7 @@ enum ActionRegistry {
         CopyPathAction(),
         OpenWithAction(),
         RunCommandAction(),
+        MoveToAction(),
         NewFileAction(),
     ]
 }
