@@ -3,7 +3,7 @@ import SwiftUI
 @main
 struct TermHereApp: App {
     init() {
-        TemplatesFolderBootstrapper.ensureExists()
+        ConfigBootstrapper.ensureExists()
     }
 
     var body: some Scene {

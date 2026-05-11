@@ -87,6 +87,7 @@ targets:
         excludes:
           - Info.plist
           - "*.entitlements"
+      - path: TermHere/ConfigBootstrapper.swift
     dependencies:
       - target: TermHereFinder
     settings:
