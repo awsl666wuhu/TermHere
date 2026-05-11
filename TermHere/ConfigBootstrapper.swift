@@ -4,10 +4,25 @@ enum ConfigBootstrapper {
     /// Subdirectories created under destinationRoot.
     static let subdirs = ["open-with", "run", "move-to", "new-file"]
 
-    /// Default location for user config.
+    /// Default location for user config: real user home (not the sandbox container)
+    /// so the Finder extension reads the same directory the host app writes to.
+    /// Access is granted by the `temporary-exception.files.home-relative-path.read-write`
+    /// entitlement on both targets.
     static var defaultDestinationRoot: URL {
-        let appSupport = FileManager.default.urls(for: .applicationSupportDirectory, in: .userDomainMask)[0]
-        return appSupport.appendingPathComponent("TermHere", isDirectory: true)
+        realUserHome().appendingPathComponent("Library/Application Support/TermHere", isDirectory: true)
+    }
+
+    private static func realUserHome() -> URL {
+        var pwd = passwd()
+        var result: UnsafeMutablePointer<passwd>? = nil
+        let bufSize = sysconf(_SC_GETPW_R_SIZE_MAX)
+        let bufLen = bufSize > 0 ? bufSize : 16384
+        let buf = UnsafeMutablePointer<CChar>.allocate(capacity: bufLen)
+        defer { buf.deallocate() }
+        if getpwuid_r(getuid(), &pwd, buf, bufLen, &result) == 0, let result, let dir = result.pointee.pw_dir {
+            return URL(fileURLWithPath: String(cString: dir))
+        }
+        return URL(fileURLWithPath: NSHomeDirectory())
     }
 
     /// Default presets location inside the host app bundle.

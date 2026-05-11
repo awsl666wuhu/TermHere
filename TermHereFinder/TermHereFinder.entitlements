@@ -8,5 +8,9 @@
 	<array>
 		<string>com.apple.Terminal</string>
 	</array>
+	<key>com.apple.security.temporary-exception.files.home-relative-path.read-write</key>
+	<array>
+		<string>/Library/Application Support/TermHere/</string>
+	</array>
 </dict>
 </plist>

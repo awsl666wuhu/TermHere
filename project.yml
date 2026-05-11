@@ -37,6 +37,8 @@ targets:
       properties:
         com.apple.security.app-sandbox: true
         com.apple.security.files.user-selected.read-write: true
+        com.apple.security.temporary-exception.files.home-relative-path.read-write:
+          - /Library/Application Support/TermHere/
     settings:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: com.termhere.TermHere
@@ -70,6 +72,8 @@ targets:
         com.apple.security.app-sandbox: true
         com.apple.security.temporary-exception.apple-events:
           - com.apple.Terminal
+        com.apple.security.temporary-exception.files.home-relative-path.read-write:
+          - /Library/Application Support/TermHere/
     settings:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: com.termhere.TermHere.Finder
