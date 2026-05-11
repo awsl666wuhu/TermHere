@@ -1,0 +1,1 @@
+{ "title": "Shell Script", "extension": "sh", "filename": "untitled", "content": "#!/usr/bin/env bash\nset -euo pipefail\n\n" }

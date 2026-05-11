@@ -18,9 +18,9 @@ targets:
     platform: macOS
     sources:
       - path: TermHere
-    resources:
-      - path: Templates
+      - path: Presets
         type: folder
+        buildPhase: resources
     info:
       path: TermHere/Info.plist
       properties:
