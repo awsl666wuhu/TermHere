@@ -1,31 +1,57 @@
 import AppKit
 
 enum MenuBuilder {
-    /// Builds the TermHere submenu. `tagsForAvailableActions` is filled with
-    /// the action ids in the order they appear, indexed by menu item tag.
+    /// Builds the TermHere submenu. The caller passes in (and is later given back)
+    /// a flat list of every clickable action, indexed by the `tag` set on each menu item.
     static func build(
         for context: SelectionContext,
         target: AnyObject,
         selector: Selector,
-        availableActionIds: inout [String]
+        clickableActions: inout [Action]
     ) -> NSMenu {
-        availableActionIds.removeAll()
+        clickableActions.removeAll()
 
-        let menu = NSMenu(title: "TermHere")
+        let outer = NSMenu(title: "TermHere")
         let submenu = NSMenu(title: "TermHere")
         let host = NSMenuItem(title: "TermHere", action: nil, keyEquivalent: "")
         host.submenu = submenu
-        menu.addItem(host)
+        outer.addItem(host)
+
+        var sawTopLevel = false
+        var addedAnyGroup = false
 
         for action in ActionRegistry.actions where action.isAvailable(in: context) {
-            let item = NSMenuItem(title: action.title, action: selector, keyEquivalent: "")
-            item.target = target
-            item.image = action.icon
-            item.tag = availableActionIds.count
-            submenu.addItem(item)
-            availableActionIds.append(action.id)
+            if let group = action as? GroupAction {
+                let items = group.loadItems(in: context)
+                guard !items.isEmpty else { continue }
+                if sawTopLevel && !addedAnyGroup {
+                    submenu.addItem(.separator())
+                }
+                addedAnyGroup = true
+                let sub = NSMenu(title: group.submenuTitle)
+                let parent = NSMenuItem(title: group.submenuTitle, action: nil, keyEquivalent: "")
+                parent.image = group.icon
+                parent.submenu = sub
+                submenu.addItem(parent)
+                for item in items {
+                    let mi = NSMenuItem(title: item.title, action: selector, keyEquivalent: "")
+                    mi.target = target
+                    mi.image = item.icon
+                    mi.tag = clickableActions.count
+                    sub.addItem(mi)
+                    clickableActions.append(item)
+                }
+            } else {
+                sawTopLevel = true
+                let mi = NSMenuItem(title: action.title, action: selector, keyEquivalent: "")
+                mi.target = target
+                mi.image = action.icon
+                mi.tag = clickableActions.count
+                submenu.addItem(mi)
+                clickableActions.append(action)
+            }
         }
 
-        return menu
+        return outer
     }
 }
