@@ -76,19 +76,22 @@ targets:
         GENERATE_INFOPLIST_FILE: NO
         SKIP_INSTALL: YES
         LD_RUNPATH_SEARCH_PATHS: "$(inherited) @executable_path/../../../../Frameworks @executable_path/../../../../../../../Frameworks"
+        ENABLE_DEBUG_DYLIB: NO
 
   TermHereFinderTests:
     type: bundle.unit-test
     platform: macOS
     sources:
       - path: TermHereFinderTests
+      - path: TermHereFinder
+        excludes:
+          - Info.plist
+          - "*.entitlements"
     dependencies:
       - target: TermHereFinder
     settings:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: com.termhere.TermHere.FinderTests
-        BUNDLE_LOADER: $(TEST_HOST)
-        TEST_HOST: $(BUILT_PRODUCTS_DIR)/TermHere.app/Contents/MacOS/TermHere
         GENERATE_INFOPLIST_FILE: YES
 
 schemes:
