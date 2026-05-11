@@ -95,6 +95,16 @@ targets:
         GENERATE_INFOPLIST_FILE: YES
 
 schemes:
+  TermHere:
+    build:
+      targets:
+        TermHere: all
+    run:
+      config: Debug
+  TermHereFinder:
+    build:
+      targets:
+        TermHereFinder: all
   TermHereFinderTests:
     build:
       targets:
