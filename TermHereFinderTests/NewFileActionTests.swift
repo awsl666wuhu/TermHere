@@ -2,6 +2,8 @@ import XCTest
 @testable import TermHereFinder
 
 final class NewFileActionTests: XCTestCase {
+    // Note: the test runner is unsandboxed, so these tests guard the happy-path
+    // write contract — they don't reproduce the Finder-extension sandbox failure.
     private var tempDir: URL!
 
     override func setUpWithError() throws {

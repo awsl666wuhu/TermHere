@@ -2,7 +2,7 @@ import AppKit
 import os.log
 
 struct NewFileAction: GroupAction {
-    private static let log = OSLog(subsystem: "com.termhere.TermHere.Finder", category: "NewFileAction")
+    fileprivate static let log = OSLog(subsystem: "com.termhere.TermHere.Finder", category: "NewFileAction")
 
     let id = "new-file"
     let title = "New File"
@@ -20,8 +20,6 @@ struct NewFileAction: GroupAction {
 }
 
 struct NewFileSubAction: Action {
-    static let log = OSLog(subsystem: "com.termhere.TermHere.Finder", category: "NewFileAction")
-
     let entry: NewFileEntry
     var id: String { "new-file:\(entry.title)" }
     var title: String { entry.title }
@@ -44,7 +42,7 @@ struct NewFileSubAction: Action {
 
         guard let data = body.data(using: .utf8) else {
             os_log("New File: could not encode body as UTF-8 for %{public}@",
-                   log: Self.log, type: .error, entry.title)
+                   log: NewFileAction.log, type: .error, entry.title)
             return
         }
 
@@ -55,7 +53,7 @@ struct NewFileSubAction: Action {
             try data.write(to: target, options: .atomic)
         } catch {
             os_log("New File: write failed at %{public}@: %{public}@",
-                   log: Self.log, type: .error, target.path, String(describing: error))
+                   log: NewFileAction.log, type: .error, target.path, String(describing: error))
             return
         }
 
