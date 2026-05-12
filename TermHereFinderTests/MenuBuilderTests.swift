@@ -31,7 +31,12 @@ final class MenuBuilderTests: XCTestCase {
     )
 
     private func itemTitles(_ menu: NSMenu) -> [String] {
-        menu.items.map { $0.isSeparatorItem ? "—" : $0.title }
+        menu.items.map { item in
+            if item.isSeparatorItem || item.title == MenuBuilder.separatorTitle {
+                return "—"
+            }
+            return item.title
+        }
     }
 
     private func buildSubmenu(groups: [[Action]]) -> NSMenu {
@@ -81,5 +86,20 @@ final class MenuBuilderTests: XCTestCase {
         XCTAssertEqual(parent.title, "Open With")
         XCTAssertNotNil(parent.submenu)
         XCTAssertEqual(parent.submenu?.items.map(\.title), ["VSCode"])
+    }
+
+    /// Regression guard for the Finder Sync separator quirk: the row we use
+    /// instead of `.separator()` must be disabled and have no action, so it
+    /// renders as inert text in the Finder context menu.
+    func testPseudoSeparatorIsDisabledAndInert() {
+        let submenu = buildSubmenu(groups: [
+            [StubAction(id: "A")],
+            [StubAction(id: "B")],
+        ])
+        let separator = submenu.items[1]
+        XCTAssertEqual(separator.title, MenuBuilder.separatorTitle)
+        XCTAssertFalse(separator.isEnabled)
+        XCTAssertNil(separator.action)
+        XCTAssertNil(separator.target)
     }
 }

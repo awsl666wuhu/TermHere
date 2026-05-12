@@ -1,6 +1,20 @@
 import AppKit
 
 enum MenuBuilder {
+    /// Marker title used for our pseudo-separator rows. Finder Sync extension menus
+    /// drop the `isSeparatorItem` flag during cross-process serialization so a real
+    /// `NSMenuItem.separator()` renders as a blank gap; instead we emit a disabled
+    /// row whose title is a run of box-drawing characters that visually reads as a
+    /// dividing line.
+    static let separatorTitle = String(repeating: "─", count: 12)
+
+    /// Builds a Finder-compatible pseudo-separator row.
+    static func makePseudoSeparator() -> NSMenuItem {
+        let item = NSMenuItem(title: separatorTitle, action: nil, keyEquivalent: "")
+        item.isEnabled = false
+        return item
+    }
+
     /// Builds the TermHere submenu from a list of semantic groups. A separator is
     /// inserted between two adjacent non-empty groups. An "empty" group is one
     /// that contributes zero menu items (all actions unavailable, or all
@@ -26,7 +40,7 @@ enum MenuBuilder {
             emit(group: group, into: submenu, context: context, target: target, selector: selector, clickableActions: &clickableActions)
             guard submenu.items.count > itemsBefore else { continue }
             if emittedAnyGroup {
-                submenu.insertItem(.separator(), at: itemsBefore)
+                submenu.insertItem(makePseudoSeparator(), at: itemsBefore)
             }
             emittedAnyGroup = true
         }
