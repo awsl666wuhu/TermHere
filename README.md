@@ -1,8 +1,17 @@
 # TermHere
 
-超轻量的 macOS Finder 右键扩展：在访达里右键任意文件夹 → **TermHere → Open Terminal Here**，立即在该路径开一个新 Terminal 窗口。
+**在 AI 编程时代，你最常做的事是什么？**
+找到一个目录，然后在那里启动 Claude / Codex，或者用 Cursor / VS Code 打开它。
 
-不止于此 —— 还内置了「用 X 打开」「在 Terminal 跑命令」「移动到 ⋯」「新建文件」四类可扩展的子菜单，全部通过 JSON 配置；你可以随时增删自己的预设，不必碰代码。
+TermHere 把这两步合并成一步：在访达里右键任意文件夹，瞬间获得：
+
+- **Run in Terminal ▸** —— 一键在当前路径启动 `claude`、`claude --dangerously-skip-permissions`、`codex` 等 AI 终端
+- **Open With ▸** —— 一键用 Cursor / VS Code 等 AI IDE 打开当前目录
+- **Open Terminal Here** —— 直接开 Terminal，路径已经 `cd` 好了
+
+不用再手动拖拽、`cd` 路径、复制粘贴。从看到代码到 AI 开始工作，只需要一次右键。
+
+所有命令和应用通过 JSON 文件配置，增删预设不需要改代码、不需要重启 Finder。
 
 ![menu](docs/screenshot.png)
 
@@ -49,8 +58,8 @@ sudo xcodebuild -runFirstLaunch    # 装一些系统组件，可能要几分钟
 - **Copy Path** — 把路径复制到剪贴板（多选则多行）
 
 按类型嵌套的子菜单：
-- **Open With ▸** — 用 VS Code / Cursor / iTerm2 / Sublime / Warp / Ghostty 等打开（仅显示本机已安装的）
-- **Run in Terminal ▸** — 在当前路径运行预设命令（内置 Claude / Claude (skip permissions) / Codex）
+- **Run in Terminal ▸** — 在当前路径运行预设命令，内置 `claude`、`claude --dangerously-skip-permissions`、`codex`
+- **Open With ▸** — 用 Cursor / VS Code / iTerm2 / Warp / Ghostty / Sublime 等打开（仅显示本机已安装的）
 - **Move To ▸** — 移动到预设目录（默认为空，按需配置）
 - **New File ▸** — 用模板创建新文件（Markdown / Python / Shell）
 
