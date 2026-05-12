@@ -1,9 +1,8 @@
 # TermHere
 
-**在 AI 编程时代，你最常做的事是什么？**
-找到一个目录，然后在那里启动 Claude / Codex，或者用 Cursor / VS Code 打开它。
+超轻量的 macOS Finder 右键扩展：让 AI 时代的编程更加直达
 
-TermHere 把这两步合并成一步：在访达里右键任意文件夹，瞬间获得：
+在访达里右键任意文件夹，瞬间获得：
 
 - **Run in Terminal ▸** —— 一键在当前路径启动 `claude`、`claude --dangerously-skip-permissions`、`codex` 等 AI 终端
 - **Open With ▸** —— 一键用 Cursor / VS Code 等 AI IDE 打开当前目录
