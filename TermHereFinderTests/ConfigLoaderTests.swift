@@ -71,7 +71,7 @@ final class ConfigLoaderDirectoryTests: XCTestCase {
         XCTAssertNil(entries.first?.args)
     }
 
-    func testDecodesOpenWithEntryWithArgsIgnoringValue() throws {
+    func testDecodesOpenWithEntryPreservesArgsIfPresent() throws {
         let json = #"{"title":"Legacy","bundleId":"com.x","args":["{path}","--flag"]}"#
         try json.write(to: tempDir.appendingPathComponent("legacy.json"), atomically: true, encoding: .utf8)
         let entries: [OpenWithEntry] = try ConfigLoader.loadAll(from: tempDir)
