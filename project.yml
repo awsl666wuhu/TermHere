@@ -70,6 +70,7 @@ targets:
       path: TermHereFinder/TermHereFinder.entitlements
       properties:
         com.apple.security.app-sandbox: true
+        com.apple.security.files.user-selected.read-write: true
         com.apple.security.temporary-exception.apple-events:
           - com.apple.Terminal
         com.apple.security.temporary-exception.files.home-relative-path.read-write:

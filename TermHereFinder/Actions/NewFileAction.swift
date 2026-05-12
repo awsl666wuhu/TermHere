@@ -19,7 +19,9 @@ struct NewFileAction: GroupAction {
     }
 }
 
-private struct NewFileSubAction: Action {
+struct NewFileSubAction: Action {
+    static let log = OSLog(subsystem: "com.termhere.TermHere.Finder", category: "NewFileAction")
+
     let entry: NewFileEntry
     var id: String { "new-file:\(entry.title)" }
     var title: String { entry.title }
@@ -39,7 +41,24 @@ private struct NewFileSubAction: Action {
             "name": nameOnly,
             "path": context.targetDirectory.path,
         ])
-        try? body.data(using: .utf8)?.write(to: target)
+
+        guard let data = body.data(using: .utf8) else {
+            os_log("New File: could not encode body as UTF-8 for %{public}@",
+                   log: Self.log, type: .error, entry.title)
+            return
+        }
+
+        let scoped = context.targetDirectory.startAccessingSecurityScopedResource()
+        defer { if scoped { context.targetDirectory.stopAccessingSecurityScopedResource() } }
+
+        do {
+            try data.write(to: target, options: .atomic)
+        } catch {
+            os_log("New File: write failed at %{public}@: %{public}@",
+                   log: Self.log, type: .error, target.path, String(describing: error))
+            return
+        }
+
         NSWorkspace.shared.activateFileViewerSelecting([target])
     }
 }
