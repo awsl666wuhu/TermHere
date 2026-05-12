@@ -34,6 +34,9 @@ private struct MoveToSubAction: Action {
 
         let log = OSLog(subsystem: "com.termhere.TermHere.Finder", category: "MoveToAction")
         for source in context.selectedItems {
+            let scoped = source.startAccessingSecurityScopedResource()
+            defer { if scoped { source.stopAccessingSecurityScopedResource() } }
+
             let base = (source.lastPathComponent as NSString).deletingPathExtension
             let ext = source.pathExtension
             let target = FilenameUtilities.nonCollidingURL(in: destDir, base: base, extension: ext)
