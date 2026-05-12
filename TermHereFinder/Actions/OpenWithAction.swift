@@ -2,7 +2,7 @@ import AppKit
 import os.log
 
 struct OpenWithAction: GroupAction {
-    private static let log = OSLog(subsystem: "com.termhere.TermHere.Finder", category: "OpenWithAction")
+    fileprivate static let log = OSLog(subsystem: "com.termhere.TermHere.Finder", category: "OpenWithAction")
 
     let id = "open-with"
     let title = "Open With"
@@ -32,12 +32,18 @@ private struct OpenWithSubAction: Action {
     func isAvailable(in context: SelectionContext) -> Bool { true }
 
     func run(in context: SelectionContext) {
-        guard let appURL = NSWorkspace.shared.urlForApplication(withBundleIdentifier: entry.bundleId) else { return }
-        let path = context.targetDirectory.path
-        let args = entry.args.map { TemplateSubstitution.apply($0, variables: ["path": path]) }
+        guard let appURL = NSWorkspace.shared.urlForApplication(withBundleIdentifier: entry.bundleId) else {
+            os_log("Open With: app not installed for bundleId=%{public}@",
+                   log: OpenWithAction.log, type: .error, entry.bundleId)
+            return
+        }
         let config = NSWorkspace.OpenConfiguration()
         config.activates = true
-        config.arguments = args
-        NSWorkspace.shared.openApplication(at: appURL, configuration: config, completionHandler: nil)
+        NSWorkspace.shared.open(
+            [context.targetDirectory],
+            withApplicationAt: appURL,
+            configuration: config,
+            completionHandler: nil
+        )
     }
 }

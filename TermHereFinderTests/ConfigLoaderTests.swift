@@ -62,4 +62,19 @@ final class ConfigLoaderDirectoryTests: XCTestCase {
         let entries: [OpenWithEntry] = try ConfigLoader.loadAll(from: tempDir)
         XCTAssertEqual(entries.map(\.title), ["Good"])
     }
+
+    func testDecodesOpenWithEntryWithoutArgs() throws {
+        let json = #"{"title":"Zed","bundleId":"dev.zed.Zed"}"#
+        try json.write(to: tempDir.appendingPathComponent("zed.json"), atomically: true, encoding: .utf8)
+        let entries: [OpenWithEntry] = try ConfigLoader.loadAll(from: tempDir)
+        XCTAssertEqual(entries.map(\.title), ["Zed"])
+        XCTAssertNil(entries.first?.args)
+    }
+
+    func testDecodesOpenWithEntryWithArgsIgnoringValue() throws {
+        let json = #"{"title":"Legacy","bundleId":"com.x","args":["{path}","--flag"]}"#
+        try json.write(to: tempDir.appendingPathComponent("legacy.json"), atomically: true, encoding: .utf8)
+        let entries: [OpenWithEntry] = try ConfigLoader.loadAll(from: tempDir)
+        XCTAssertEqual(entries.first?.args, ["{path}", "--flag"])
+    }
 }

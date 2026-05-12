@@ -17,7 +17,7 @@ enum TemplateSubstitution {
 struct OpenWithEntry: Codable {
     let title: String
     let bundleId: String
-    let args: [String]
+    var args: [String]? = nil
     var showOnlyIfInstalled: Bool? = true
 }
 
