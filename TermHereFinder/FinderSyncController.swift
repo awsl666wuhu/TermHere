@@ -6,7 +6,7 @@ final class FinderSyncController: FIFinderSync {
     private let log = OSLog(subsystem: "com.termhere.TermHere.Finder", category: "extension")
 
     private var pendingContext: SelectionContext?
-    private var pendingActionIds: [String] = []
+    private var pendingActions: [Action] = []
 
     override init() {
         super.init()
@@ -25,26 +25,22 @@ final class FinderSyncController: FIFinderSync {
             for: context,
             target: self,
             selector: #selector(handleMenuClick(_:)),
-            availableActionIds: &pendingActionIds
+            clickableActions: &pendingActions
         )
     }
 
     @objc private func handleMenuClick(_ sender: NSMenuItem) {
         let idx = sender.tag
-        guard idx >= 0, idx < pendingActionIds.count else {
-            os_log("Click tag out of range tag=%d count=%d", log: log, type: .error, idx, pendingActionIds.count)
-            return
-        }
-        let actionId = pendingActionIds[idx]
-        guard let action = ActionRegistry.actions.first(where: { $0.id == actionId }) else {
-            os_log("Action not found id=%{public}@", log: log, type: .error, actionId)
+        guard idx >= 0, idx < pendingActions.count else {
+            os_log("Click tag out of range tag=%d count=%d", log: log, type: .error, idx, pendingActions.count)
             return
         }
         guard let context = pendingContext else {
             os_log("No pending context", log: log, type: .error)
             return
         }
-        os_log("Running action=%{public}@ target=%{public}@", log: log, type: .info, actionId, context.targetDirectory.path)
+        let action = pendingActions[idx]
+        os_log("Running action=%{public}@ target=%{public}@", log: log, type: .info, action.id, context.targetDirectory.path)
         action.run(in: context)
     }
 }

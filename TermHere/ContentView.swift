@@ -30,12 +30,12 @@ struct ContentView: View {
             }
 
             VStack(alignment: .leading, spacing: 10) {
-                Text("Templates").font(.headline)
-                Text("Drop JSON templates into this folder to add 'New File' actions later.")
+                Text("Config").font(.headline)
+                Text("Drop JSON files into this folder to add Open With / Run / Move To / New File entries.")
                     .font(.callout)
                     .foregroundStyle(.secondary)
                     .fixedSize(horizontal: false, vertical: true)
-                Button("Reveal Templates Folder") { revealTemplatesFolder() }
+                Button("Reveal Config Folder") { revealConfigFolder() }
             }
 
             Spacer()
@@ -53,9 +53,9 @@ struct ContentView: View {
         NSWorkspace.shared.open(url)
     }
 
-    private func revealTemplatesFolder() {
-        let url = TemplatesFolderBootstrapper.templatesURL
-        TemplatesFolderBootstrapper.ensureExists()
+    private func revealConfigFolder() {
+        let url = ConfigBootstrapper.defaultDestinationRoot
+        ConfigBootstrapper.ensureExists()
         NSWorkspace.shared.activateFileViewerSelecting([url])
     }
 }

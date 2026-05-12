@@ -1,7 +1,9 @@
 import Foundation
 
 enum ActionRegistry {
-    static let actions: [Action] = [
-        OpenTerminalAction()
+    static let groups: [[Action]] = [
+        [OpenTerminalAction(), OpenWithAction(), RunCommandAction()],
+        [CopyPathAction()],
+        [NewFileAction(), MoveToAction()],
     ]
 }

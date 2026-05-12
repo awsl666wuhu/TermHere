@@ -50,47 +50,104 @@ killall Finder
 
 ## 使用
 
-右键文件夹 / 文件 / 文件夹内空白处 → **TermHere → Open Terminal Here**。
+右键文件夹 / 文件 / 文件夹内空白处 → **TermHere ▸**
 
-| 右键位置 | 打开的目录 |
+顶层（高频）：
+- **Open Terminal Here** — 在当前路径开新 Terminal 窗口
+- **Copy Path** — 把路径复制到剪贴板（多选则多行）
+
+按类型嵌套的子菜单（v0.2 新增）：
+- **Open With ▸** — 用 VS Code / Cursor / iTerm 等打开。检测到已安装的才会出现
+- **Run in Terminal ▸** — 在当前路径运行预设命令（Claude / Codex / ...）
+- **Move To ▸** — 移动到预设目录（默认为空，按需配置）
+- **New File ▸** — 用模板创建新文件（Markdown / Python / Shell ...）
+
+| 右键位置 | 适用动作 |
 |---|---|
-| 文件夹 | 该文件夹 |
-| 文件 | 该文件的父文件夹 |
-| 文件夹内空白处 | 当前 Finder 窗口的文件夹 |
-| 多选 | 选中项的共同父文件夹 |
+| 文件夹 | 全部 |
+| 文件 | 全部（Terminal/Run 在父目录） |
+| 文件夹内空白处 | 除 Move To 外全部 |
+| 多选 | 全部（Move To 移动每个；Copy Path 多行；Terminal/Run 在共同父目录） |
 
 **第一次点击会弹一个对话框**："TermHere Finder Extension 想要控制 Terminal"——必须点 **好** / **允许**。这是 macOS 的自动化权限，扩展需要它来给 Terminal 发指令开新窗口。
 
 如果不小心点了"不允许"，到 **系统设置 → 隐私与安全性 → 自动化** 里把 TermHere Finder Extension 下的 Terminal 勾上即可。
+
+## 配置
+
+所有可配置菜单项以 JSON 形式存放在 `~/Library/Application Support/TermHere/`：
+
+```
+~/Library/Application Support/TermHere/
+├── open-with/      # "用 X 打开"，每个 .json 一项
+├── run/            # 在 Terminal 跑命令，每个 .json 一项
+├── move-to/        # 移动到目录，每个 .json 一项
+└── new-file/       # 文件模板，每个 .json 一项
+```
+
+首次启动会自动写入若干预设；编辑或删除都不会被覆盖。从主程序点 **"Reveal Config Folder"** 可以直接打开这个目录。
+
+### JSON 格式
+
+`open-with/*.json`：
+```json
+{ "title": "Visual Studio Code", "bundleId": "com.microsoft.VSCode", "args": ["{path}"] }
+```
+
+`run/*.json`：
+```json
+{ "title": "Claude", "command": "claude" }
+```
+
+`move-to/*.json`：
+```json
+{ "title": "Inbox", "destination": "~/Desktop/_inbox" }
+```
+
+`new-file/*.json`：
+```json
+{ "title": "Markdown", "extension": "md", "filename": "Untitled", "content": "# {name}\n\n" }
+```
+
+支持的模板变量：`{path}`（目标目录）、`{filename}`（含扩展名）、`{name}`（不含扩展名）。
+
+要添加新项：写一个 JSON 文件丢进对应子目录。要删除内置项：删除对应 JSON 文件。下次右键即可生效。
 
 ## 项目结构
 
 ```
 TermHere/
 ├── project.yml                       # XcodeGen 配置——工程的唯一真源
-├── TermHere.xcodeproj                # 由 xcodegen 生成
-├── TermHere/                         # 主程序（最小 SwiftUI 设置窗口）
-│   ├── TermHereApp.swift
-│   ├── ContentView.swift
-│   └── TemplatesFolderBootstrapper.swift
+├── docs/
+│   ├── specs/                        # 设计文档
+│   └── plans/                        # 实现计划
+├── TermHere/                         # 主程序（最小 SwiftUI）
 ├── TermHereFinder/                   # Finder Sync 扩展
 │   ├── FinderSyncController.swift    # FIFinderSync 入口
-│   ├── SelectionContext.swift        # 选中上下文（动作的输入）
+│   ├── SelectionContext.swift        # 选中上下文
 │   ├── MenuBuilder.swift             # 构建 TermHere 子菜单
-│   ├── Action.swift                  # 扩展协议
+│   ├── Action.swift                  # 普通 Action 协议
+│   ├── GroupAction.swift             # 带子菜单的 Action 协议
+│   ├── ConfigLoader.swift            # JSON 解析 + 模板变量
+│   ├── FilenameUtilities.swift       # 文件名冲突处理
+│   ├── TerminalLauncher.swift        # AppleScript 启动 Terminal
 │   ├── ActionRegistry.swift          # 已注册的动作列表
 │   └── Actions/
-│       └── OpenTerminalAction.swift  # v1 唯一动作（用 AppleScript 给 Terminal 发 `do script`）
-└── Templates/                        # 预留给未来"新建文件"模板，v1 为空
+│       ├── OpenTerminalAction.swift
+│       ├── CopyPathAction.swift
+│       ├── OpenWithAction.swift
+│       ├── RunCommandAction.swift
+│       ├── MoveToAction.swift
+│       └── NewFileAction.swift
+├── TermHereFinderTests/              # 单元测试
+└── Presets/                          # 内置 JSON 预设，首次启动写入用户目录
 ```
 
 ## 添加新动作
 
-1. 在 `TermHereFinder/Actions/` 下新建 `MyAction.swift`，实现 `Action` 协议
+1. 在 `TermHereFinder/Actions/` 下新建 `MyAction.swift`，实现 `Action`（或 `GroupAction`）协议
 2. 在 `ActionRegistry.actions` 里追加一行
 3. 重新构建。新菜单项会自动出现在 `TermHere` 子菜单下
-
-未来"新建文件"功能会读取 `~/Library/Application Support/TermHere/Templates/*.json` 里的模板，格式参见 [设计文档](#)。
 
 ## 故障排查
 
