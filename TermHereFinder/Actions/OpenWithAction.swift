@@ -39,11 +39,21 @@ private struct OpenWithSubAction: Action {
         }
         let config = NSWorkspace.OpenConfiguration()
         config.activates = true
+
+        let scoped = context.targetDirectory.startAccessingSecurityScopedResource()
+        defer { if scoped { context.targetDirectory.stopAccessingSecurityScopedResource() } }
+
         NSWorkspace.shared.open(
             [context.targetDirectory],
             withApplicationAt: appURL,
             configuration: config,
-            completionHandler: nil
+            completionHandler: { _, error in
+                if let error = error {
+                    os_log("Open With: open(%{public}@) failed: %{public}@",
+                           log: OpenWithAction.log, type: .error,
+                           context.targetDirectory.path, String(describing: error))
+                }
+            }
         )
     }
 }

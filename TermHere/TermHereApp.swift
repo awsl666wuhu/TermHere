@@ -9,7 +9,7 @@ struct TermHereApp: App {
     var body: some Scene {
         Window("TermHere", id: "main") {
             ContentView()
-                .frame(width: 460, height: 320)
+                .frame(width: 380, height: 340)
         }
         .windowResizability(.contentSize)
     }
