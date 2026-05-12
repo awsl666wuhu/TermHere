@@ -23,15 +23,8 @@ enum MenuBuilder {
         var emittedAnyGroup = false
         for group in groups {
             let itemsBefore = submenu.items.count
-            let clicksBefore = clickableActions.count
             emit(group: group, into: submenu, context: context, target: target, selector: selector, clickableActions: &clickableActions)
-            let didEmit = submenu.items.count > itemsBefore
-            guard didEmit else {
-                if clickableActions.count > clicksBefore {
-                    clickableActions.removeLast(clickableActions.count - clicksBefore)
-                }
-                continue
-            }
+            guard submenu.items.count > itemsBefore else { continue }
             if emittedAnyGroup {
                 submenu.insertItem(.separator(), at: itemsBefore)
             }
