@@ -57,7 +57,7 @@ sudo xcodebuild -runFirstLaunch    # 装一些系统组件，可能要几分钟
 - **Copy Path** — 把路径复制到剪贴板（多选则多行）
 
 按类型嵌套的子菜单：
-- **Run in Terminal ▸** — 在当前路径运行预设命令，内置 `claude`、`claude --dangerously-skip-permissions`、`codex`
+- **Run in Terminal ▸** — 在当前路径运行预设命令，内置 `claude`、`claude --dangerously-skip-permissions`、`codex`，以及三个 Claude 起手 prompt（理解项目 / 审核当前文件 / 解释当前文件）
 - **Open With ▸** — 用 Cursor / VS Code / iTerm2 / Warp / Ghostty / Sublime 等打开（仅显示本机已安装的）
 - **Move To ▸** — 移动到预设目录（默认为空，按需配置）
 - **New File ▸** — 用模板创建新文件（Markdown / Python / Shell）
@@ -107,6 +107,24 @@ sudo xcodebuild -runFirstLaunch    # 装一些系统组件，可能要几分钟
 ```json
 { "title": "Claude (skip permissions)", "command": "claude --dangerously-skip-permissions" }
 ```
+
+`command` 字段支持模板变量（与 `new-file/*.json` 一致）：
+
+- `{path}` —— 当前路径（命令已经 `cd` 到这里，通常用不到）
+- `{filename}` —— 选中文件的文件名（含扩展名）；空白处右键时为空
+- `{name}` —— `{filename}` 去掉扩展名；空白处右键时为空
+- `{selection}` —— 全部选中项相对当前路径的路径，已 shell 转义、空格分隔；空白处右键时为空
+
+自定义 prompt 的例子（在 `~/Library/Application Support/TermHere/run/` 里丢一个 JSON 即可）：
+
+```json
+{
+  "title": "翻译当前文件到英文",
+  "command": "claude '请把 {filename} 翻译成英文，保留 Markdown 格式。'"
+}
+```
+
+想要 codex 或 `claude --dangerously-skip-permissions` 版本的 prompt 预设，照着内置的 `claude-review-file.json` 把 `claude` 换掉即可。
 
 `move-to/*.json` —— 把选中的文件移动到目标目录：
 ```json
