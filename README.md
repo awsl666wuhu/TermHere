@@ -1,5 +1,7 @@
 # TermHere
 
+> [English](README.en.md) · 中文
+
 超轻量的 macOS Finder 右键扩展：让 AI 时代的编程更加直达
 
 在访达里右键任意文件夹，瞬间获得：
