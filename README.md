@@ -10,7 +10,7 @@
 - **Open With ▸** —— 一键用 Cursor / VS Code 等 AI IDE 打开当前目录
 - **Open Terminal Here** —— 直接开 Terminal，路径已经 `cd` 好了
 - **自定义起手 prompt** —— 内置"理解此项目 / 审核当前文件 / 解释当前文件"，命令支持 `{filename}` / `{path}` 等模板变量；自己丢一个 JSON 即可加新的
-- **一键调用 Claude Code skill** —— 右键直接进 brainstorming / systematic-debugging 等工作流，免去打开终端再敲斜杠命令的两步
+- **一键调用 skill** —— 右键直接进 brainstorming / systematic-debugging 等工作流，也可使用自定义使用自己封装的 skill
 
 不用再手动拖拽、`cd` 路径、复制粘贴。从看到代码到 AI 开始工作，只需要一次右键。
 
