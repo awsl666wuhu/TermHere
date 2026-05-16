@@ -9,10 +9,12 @@ Right-click any folder in Finder and instantly get:
 - **Run in Terminal ▸** — launch `claude`, `claude --dangerously-skip-permissions`, `codex`, etc. at the current path with one click
 - **Open With ▸** — open the current folder in Cursor / VS Code and other AI-friendly IDEs with one click
 - **Open Terminal Here** — open Terminal already `cd`-ed to the right path
+- **Custom starter prompts** — built-in "understand this project / review this file / explain this file"; commands support `{filename}` / `{path}` template variables; drop a JSON file to add your own
+- **One-click Claude Code skill invocation** — right-click straight into workflows like brainstorming / systematic-debugging; no need to open a terminal and type the slash command yourself
 
 No more dragging, manual `cd`, or copy-pasting paths. From "I see the code" to "AI is working on it" in a single right-click.
 
-All commands and apps are configured via JSON files. Adding or removing presets needs no code changes and no Finder restart.
+All commands, apps, and prompts are configured via JSON files. Adding or removing presets needs no code changes and no Finder restart.
 
 ![menu](docs/screenshot.png)
 
