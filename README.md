@@ -59,7 +59,7 @@ sudo xcodebuild -runFirstLaunch    # 装一些系统组件，可能要几分钟
 - **Copy Path** — 把路径复制到剪贴板（多选则多行）
 
 按类型嵌套的子菜单：
-- **Run in Terminal ▸** — 在当前路径运行预设命令，内置 `claude`、`claude --dangerously-skip-permissions`、`codex`，以及三个 Claude 起手 prompt（理解项目 / 审核当前文件 / 解释当前文件）
+- **Run in Terminal ▸** — 在当前路径运行预设命令，内置 `claude`、`claude --dangerously-skip-permissions`、`codex`，三个 Claude 起手 prompt（理解项目 / 审核当前文件 / 解释当前文件），以及两个 Claude Code skill 调用示例（头脑风暴 / 系统性调试）
 - **Open With ▸** — 用 Cursor / VS Code / iTerm2 / Warp / Ghostty / Sublime 等打开（仅显示本机已安装的）
 - **Move To ▸** — 移动到预设目录（默认为空，按需配置）
 - **New File ▸** — 用模板创建新文件（Markdown / Python / Shell）
@@ -127,6 +127,15 @@ sudo xcodebuild -runFirstLaunch    # 装一些系统组件，可能要几分钟
 ```
 
 想要 codex 或 `claude --dangerously-skip-permissions` 版本的 prompt 预设，照着内置的 `claude-review-file.json` 把 `claude` 换掉即可。
+
+调用 Claude Code skill 也是同样的写法（内置 `claude-skill-brainstorm.json` / `claude-skill-debug.json`）：
+
+```json
+{
+  "title": "Claude · skill · 写实现计划",
+  "command": "claude '请用 superpowers:writing-plans skill，根据这个目录里的 spec 写一份实现计划。'"
+}
+```
 
 `move-to/*.json` —— 把选中的文件移动到目标目录：
 ```json

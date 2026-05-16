@@ -1,0 +1,1 @@
+{ "title": "Claude · skill · 系统性调试", "command": "claude '请用 superpowers:systematic-debugging skill 分析 {filename} 里的 bug 或异常行为。我会接着告诉你具体现象。'" }

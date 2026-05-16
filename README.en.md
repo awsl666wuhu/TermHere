@@ -59,7 +59,7 @@ Top-level (high-frequency):
 - **Copy Path** — copy the path to the clipboard (one line per item on multi-select)
 
 Submenus grouped by type:
-- **Run in Terminal ▸** — run preset commands at the current path. Built-in: `claude`, `claude --dangerously-skip-permissions`, `codex`, plus three Claude starter prompts (understand the project / review this file / explain this file).
+- **Run in Terminal ▸** — run preset commands at the current path. Built-in: `claude`, `claude --dangerously-skip-permissions`, `codex`, three Claude starter prompts (understand the project / review this file / explain this file), and two Claude Code skill invocation examples (brainstorming / systematic debugging).
 - **Open With ▸** — open with Cursor / VS Code / iTerm2 / Warp / Ghostty / Sublime, etc. (only apps actually installed on your machine show up)
 - **Move To ▸** — move to a preset directory (empty by default; configure as needed)
 - **New File ▸** — create a new file from a template (Markdown / Python / Shell)
@@ -127,6 +127,15 @@ Custom prompt example (drop a JSON into `~/Library/Application Support/TermHere/
 ```
 
 Want codex or `claude --dangerously-skip-permissions` versions of the bundled prompts? Copy `claude-review-file.json` and swap `claude` for `codex` or `claude --dangerously-skip-permissions`.
+
+Invoking a Claude Code skill works the same way (see bundled `claude-skill-brainstorm.json` / `claude-skill-debug.json`):
+
+```json
+{
+  "title": "Claude · skill · write implementation plan",
+  "command": "claude 'Please use the superpowers:writing-plans skill to draft an implementation plan from the spec in this directory.'"
+}
+```
 
 `move-to/*.json` — move selected items to a target directory:
 ```json
